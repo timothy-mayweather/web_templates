@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recorder</title>
+  <script src="../js/send.min.js"></script>
+  <link rel="stylesheet" href="../css/fontawesome-5-pro-master/css/all.min.css">
+  <style>
+      .media-container{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 20%;
+          width: 20%;
+          padding: 5px;
+          overflow: hidden;
+      }
+      .video, .img{
+          width: 100%;
+          height: 100%;
+      }
+      .c-video{
+          display: inherit;
+          width: 80%;
+          height: 100%;
+          max-width: 800px;
+          position: relative;
+          overflow: hidden;
+          justify-content: center;
+          align-items: center;
+      }
+      .c-video:hover .controls{
+          transform: translateY(0);
+      }
+      .controls{
+          display: flex;
+          flex-wrap: wrap;
+          background: rgba(0,0,0,0.9);
+          transform: translateY(-100%);
+          transition: all 0.5s;
+          padding: 6px;
+          justify-content: center;
+          align-items: center;
+          top: 0;
+          position: absolute;
+      }
+      button:focus{outline: none}
+      button{
+          font-family: 'Font Awesome 5 Free';
+          -webkit-font-smoothing: antialiased;
+          background: inherit;
+          border: inherit;
+          outline: none;
+          cursor: pointer;
+      }
+      .fa-webcam-slash, .fa-microphone-slash, .stop-recording{
+          color: red;
+      }
+      .image-controls button, .capture{
+          color: violet;
+      }
+      .fa-webcam, .fa-microphone, .player-controls button, .record{
+          color: lime;
+      }
+      .feedback{
+          color: floralwhite
+      }
+      .stop-recording{
+          display: none;
+      }
+      .canvas{
+        display: none;
+      }
+  </style>
+</head>
+<body>
+<div class="media-container">
+</div>
+<script>
+    $(()=> {
+        const inner = '<div class="c-video">\n' +
+            '      <video controls autoplay autofocus class="recorder video" muted src="Love%20Yoo%20-feffe%20bussi%20official%20video.mp4"></video>\n' +
+            '      <video controls autoplay autofocus class="player video" hidden></video>\n' +
+            '      <img hidden class="img" src="" alt="">\n' +
+            '      <canvas class="canvas" hidden></canvas>\n' +
+            '      <div class="controls">\n' +
+            '        <button class="closeCamera fas fa-webcam" title="Disconnect camera" type="button"></button>\n' +
+            '        <button class="closeMic fa fa-microphone" title="Mute" type="button"></button>\n' +
+            '        <span class="image-controls" hidden>\n' +
+            '            <button class="save-image fa fa-save" title="save image" type="button"></button>\n' +
+            '            <a class="img-download-link" download="captured"><button class="far fa-download" title="download image" type="button"></button></a>\n' +
+            '            <button class="discard-image fa fa-arrow-left" title="Go back. Image will be discarded" type="button"></button>\n' +
+            '        </span>\n' +
+            '        <span class="initial-controls">\n' +
+            '            <button class="capture far fa-camera" title="capture" type="button"></button>\n' +
+            '            <button class="record far fa-video" title="record" type="button"></button>\n' +
+            '        </span>\n' +
+            '        <button class="stop-recording fa fa-stop-circle" title="stop recording" type="button"></button>\n' +
+            '        <span class="feedback" hidden></span>\n' +
+            '        <span class="player-controls" hidden>\n' +
+            '            <button class="save-video fa fa-save" title="save video" type="button"></button>\n' +
+            '            <a class="video-download-link" download="recorded"><button class="fa fa-download" title="download video" type="button"></button></a>\n' +
+            '            <button class="discard-video fa fa-arrow-left" title="Go back. Video will be discarded" type="button"></button>\n' +
+            '        </span>\n' +
+            '      </div>\n' +
+            '    </div>' +
+            '<audio hidden class="audio">\n' +
+            '  <source src="../audio/camera-shutter.mp3">\n' +
+            '  <source src="../audio/camera-shutter.oga">\n' +
+            '  <source src="../audio/camera-shutter.ogg">\n' +
+            '  <source src="../audio/camera-shutter.wav">\n' +
+            '  <source src="../audio/camera-shutter.opus">\n' +
+            '  <source src="../audio/camera-shutter.flac">\n' +
+            '</audio>';
+        const container = $(".media-container");
+        for (let i =0; i < container.length; i++) {
+            container[i].innerHTML = (inner);
+        }
+        useMedia();
+        function useMedia() {
+            const feedback = $(".feedback");
+            const initialControls = $(".initial-controls");
+            const imageControls = $(".image-controls");
+            const playerControls = $(".player-controls");
+            const discardImage = $(".discard-image");
+            const downloadImageLink = $(".img-download-link");
+            const downloadVideoLink = $(".video-download-link");
+            const startRecording = $(".record");
+            const stopRecording = $(".stop-recording");
+            const discardVideo = $(".discard-video");
+            const screenshotButton = $(".capture");
+            const captureSound = $(".audio");
+            const img = $(".img");
+            const video = $(".recorder");
+            const recordedVideo = $(".player");
+            const canvas = $(".canvas");
+            const closeCamera = $(".closeCamera");
+            const closeMic = $(".closeMic");
+            const cancelMedia = $(".cancel-media");
+            let mediaRecorder = [];
+            let chunks = [];
+
+            let constraints = {
+                video: {
+                    facingMode: "user"
+                },
+                audio: {
+                    echoCancellation: true
+                }
+            }
+
+            DetectRTC.load(() => {
+                if (DetectRTC.isWebRTCSupported === false) {
+                    $.notify('This browser lacks WebRTC support.', {className: "error", autoHideDelay: 10000});
+                }
+                if (DetectRTC.hasWebcam === false) {
+                    $.notify('Please install an external webcam device.', {className: "error", autoHideDelay: 10000});
+                }
+                if (DetectRTC.hasMicrophone === false) {
+                    $.notify('Please install an external microphone device.', {
+                        className: "error",
+                        autoHideDelay: 10000
+                    });
+                }
+                if (DetectRTC.hasSpeakers === false && (DetectRTC.browser.name === 'Chrome' || DetectRTC.browser.name === 'Edge')) {
+                    $.notify('Oops, your system can not play audios.', {className: "error", autoHideDelay: 10000});
+                }
+            });
+
+            for (let i =0; i < container.length; i++) {
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(
+                        (stream) => {
+                          video[i].srcObject = stream;
+                          closeMic[i].setAttribute("title", "Mute");
+                          closeMic[i].className = "closeMic fa fa-microphone";
+                          closeCamera[i].setAttribute("title", "Disconnect camera");
+                          closeCamera[i].className = "closeCamera fas fa-webcam";
+                          startRecording[i].setAttribute("title", "record");
+                          startRecording[i].style.color = "lime";
+                          screenshotButton[i].setAttribute("title", "capture");
+                          screenshotButton[i].style.color = "violet";
+                          hide(feedback[i]);
+
+                          mediaRecorder[i] = new MediaRecorder(stream);
+                          chunks[i] = [];
+
+                          startRecording[i].onclick = function () {
+                              hide(initialControls[i]);
+                              show(feedback[i]);
+                              stopRecording[i].style.display = "inline";
+                              mediaRecorder[i].start();
+                              video[i].onpause = () => {
+                                  mediaRecorder[i].pause();
+                                  feedback[i].innerText = "paused";
+                              }
+                              video[i].onplay = () => {
+                                  mediaRecorder[i].resume();
+                                  feedback[i].innerText = "recording...";
+                              }
+                              feedback[i].innerText = "recording...";
+                          }
+
+                          stopRecording[i].addEventListener('click', () => {
+                              hide(feedback[i], video[i]);
+                              show(recordedVideo[i], playerControls[i]);
+                              stopRecording[i].style.display = "none";
+                              mediaRecorder[i].stop();
+                          });
+                          mediaRecorder[i].ondataavailable = function (ev) {
+                              chunks[i].push(ev.data);
+                          }
+                          mediaRecorder[i].onstop = () => {
+                              let blob = new Blob(chunks[i], {'type': 'video/mp4;'});
+                              chunks[i] = [];
+                              recordedVideo[i].src = window.URL.createObjectURL(blob);
+                              downloadVideoLink[i].setAttribute("href", recordedVideo[i].src);
+                          }
+                          closeCamera[i].onclick = () => {
+                              if (closeCamera[i].className === "closeCamera fas fa-webcam-slash") {
+                                  controller('video', true);
+                                  closeCamera[i].setAttribute("title", "Disconnect camera");
+                                  closeCamera[i].className = "closeCamera fas fa-webcam";
+                              } else {
+                                  controller('video', false);
+                                  closeCamera[i].setAttribute("title", "Turn on camera");
+                                  closeCamera[i].className = "closeCamera fas fa-webcam-slash";
+                              }
+                          }
+                          closeMic[i].onclick = () => {
+                              if (closeMic[i].className === "closeMic fa fa-microphone-slash") {
+                                  controller('audio', true);
+                                  closeMic[i].setAttribute("title", "Mute");
+                                  closeMic[i].className = "closeMic fa fa-microphone";
+                              } else {
+                                  controller('audio', false);
+                                  closeMic[i].setAttribute("title", "Turn on Microphone");
+                                  closeMic[i].className = "closeMic fa fa-microphone-slash"
+                              }
+                          }
+                          screenshotButton[i].onclick = function () {
+                              captureSound[i].play();
+                              show(img[i], imageControls[i]);
+                              hide(video[i], initialControls[i]);
+
+                              canvas[i].width = video[i].videoWidth;
+                              canvas[i].height = video[i].videoHeight;
+                              canvas[i].getContext("2d").drawImage(video[i], 0, 0);
+                              img[i].src = canvas[i].toDataURL("image/png");
+
+                              downloadImageLink[i].setAttribute("href", img[i].src);
+                          }
+                          for (let x of cancelMedia) {
+                              x.addEventListener("click", () => {
+                                  disconnect();
+                              });
+                          }
+
+                          function controller(type, enable) {
+                              stream.getTracks().forEach(function (track) {
+                                  if (track.readyState === 'live' && track.kind === type) {
+                                      track.enabled = enable;
+                                  }
+                              });
+                          }
+
+                          function disconnect() {
+                              stream.getTracks().forEach(function (track) {
+                                  track.stop();
+                              });
+                          }
+                    }
+                    )
+                    .catch(
+                        (err) => {
+                          feedback[i].innerText = err.message;
+                          $.notify(err.message, {className: "error", autoHideDelay: 10000});
+                          closeMic[i].setAttribute("title", "Disabled");
+                          closeMic[i].className = "closeMic fa fa-microphone-slash";
+                          closeCamera[i].setAttribute("title", "Disabled");
+                          closeCamera[i].className = "closeCamera fas fa-webcam-slash";
+                          startRecording[i].setAttribute("title", "Disabled");
+                          startRecording[i].style.color = "red";
+                          screenshotButton[i].setAttribute("title", "Disabled");
+                          screenshotButton[i].style.color = "red";
+                          show(feedback[i]);
+                        }
+                    );
+
+
+                discardImage[i].onclick = () => {
+                    img[i].src = "";
+                    hide(img[i], imageControls[i]);
+                    show(video[i], initialControls[i]);
+                }
+
+                discardVideo[i].onclick = () => {
+                    recordedVideo[i].src = "";
+                    hide(recordedVideo[i], playerControls[i]);
+                    show(video[i], initialControls[i]);
+                }
+            }
+        }
+
+        function hide() {
+            for (let i of arguments) {
+                i.hidden = true;
+            }
+        }
+
+        function show() {
+            for (let i of arguments) {
+                i.hidden = false;
+            }
+        }
+    });
+</script>
+</body>
+</html>

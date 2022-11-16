@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../js/send.min.js"></script>
+  <style>
+    *{
+        outline: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        box-sizing: unset;
+    }
+    html, body{
+        height: 100%;
+        width: 100%;
+        background-color: #090e11;
+        background-image: none;
+        color: #d4d5d7;
+        overflow: hidden;
+    }
+    .app{
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .cont{
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+        scrollbar-color: hsla(0,0%,100%,.16) transparent;
+        scroll-behavior: smooth;
+        -ms-overflow-style: scrollbar;
+        scrollbar-width: thin;
+    }
+    .inn1{
+        min-width: 300px;
+        height: 100%;
+        border-right: 1px solid hsla(0,0%,100%,.16);
+        display: flex;
+        flex-direction: column;
+    }
+    .inn2{
+        height: 100%;
+        width: 70%;
+    }
+
+    /* width */
+    ::-webkit-scrollbar{
+        width: 5px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: hsla(0,0%,100%,.16);
+        border-radius: 5px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    /*.header-container{*/
+    /*    */
+    /*}*/
+    .header1{
+        padding: 10px 16px;
+        background-color: #2a2f32;
+        position: relative;
+        z-index: 1000;
+        box-sizing: border-box;
+        display: flex;
+        flex: none;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
+        height: 59px;
+        outline: none;
+    }
+    .prof-image{
+        position: relative;
+        z-index: 100;
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        transition: opacity .15s ease-out;
+        visibility: visible;
+        border-radius: 50%;
+        opacity: 1;
+        vertical-align: initial;
+    }
+    ::-webkit-search-cancel-button{
+        display: none;
+    }
+  </style>
+<!--  <link rel="stylesheet" href="app3.css">-->
+</head>
+<body>
+  <div class="container-fluid app">
+    <div class="row cont">
+      <div style="left: 0; background-position: 0 0; background-color: #1e2429; transform-origin: center; background-repeat: repeat-x; min-height: 512px; display: flex; width: 100%; height: 100%; position: relative; top: 0; overflow: hidden">
+        <div style="transform: translateZ(0); flex: 30%;position: relative; z-index: 100; height: 100%; overflow: hidden;">
+          <div class="col- inn1">
+            <header class="header1">
+              <div style="flex-grow: 1">
+                <div style="height: 40px; width: 40px; cursor: pointer; border-radius: 50%; position: relative; overflow: hidden">
+                  <img src="../images/gamer.jpeg" alt="" draggable="false" class="prof-image">
+                </div>
+              </div>
+              <div style="flex: none; color: #b1b3b5; outline: none; margin: 0; padding: 0; border: 0;">
+                <div style="display: flex; align-items: center;">
+                  <span style="display: flex; align-items: center">
+                    <div style="margin-left: 0; padding: 8px; border-radius: 50%; position: relative; flex: none; height: 24px; transition: background-color .3s ease;">
+                      <div aria-disabled="false" role="button" tabindex="0" title="Status" aria-label="Status" style="display: flex; align-items: center; cursor: pointer;">
+                        <span data-testid="status-v3-unread" data-icon="status-v3-unread" class="">
+                          <svg class="" style="display: block; pointer-events: none; cursor: pointer;" id="df9d3429-f0ef-48b5-b5eb-f9d27b2deba6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M12.072 1.761a10.05 10.05 0 0 0-9.303 5.65.977.977 0 0 0 1.756.855 8.098 8.098 0 0 1 7.496-4.553.977.977 0 1 0 .051-1.952zM1.926 13.64a10.052 10.052 0 0 0 7.461 7.925.977.977 0 0 0 .471-1.895 8.097 8.097 0 0 1-6.012-6.386.977.977 0 0 0-1.92.356zm13.729 7.454a10.053 10.053 0 0 0 6.201-8.946.976.976 0 1 0-1.951-.081v.014a8.097 8.097 0 0 1-4.997 7.209.977.977 0 0 0 .727 1.813l.02-.009z"></path>
+                            <path fill="#009588" d="M19 1.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path>
+                          </svg>
+                        </span>
+                      </div>
+                      <span></span>
+                    </div>
+                    <div style="margin-left: 10px; padding: 8px; border-radius: 50%; position: relative; flex: none; height: 24px;">
+                      <div aria-disabled="false" role="button" tabindex="0" title="New chat" aria-label="New chat"><span data-testid="chat" data-icon="chat" class=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z"></path></svg></span></div>
+                      <span></span>
+                    </div>
+                    <div style="margin-left: 10px; padding: 8px; border-radius: 50%; position: relative; flex: none; height: 24px;">
+                      <div aria-disabled="false" role="button" tabindex="0" title="Menu" aria-label="Menu">
+                        <span data-testid="menu" data-icon="menu" class="">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"></path>
+                          </svg>
+                        </span>
+                      </div>
+                      <span></span>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </header>
+            <span></span>
+            <div tabindex="-1" style="border-bottom:1px solid hsla(0,0%,100%,.16); flex: none">
+              <div style="background-color:initial; position: relative; z-index: 100; box-sizing: border-box; flex: none; height: 49px; transition: box-shadow .18s ease-out,background-color .25s ease-out;">
+                <button style="left: 24px; position: absolute; top: 12px; z-index: 100; width: 24px; height: 24px; background-color: inherit">
+                  <div style="pointer-events: none; opacity: 0; transition: all .3s cubic-bezier(.4,0,.2,1); transform: scale(.8) rotate(225deg); top: 0; left: 0; position: absolute; z-index: 100; color: #73787b;">
+                    <span data-testid="back" data-icon="back" class="">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="display: block">
+                        <path fill="currentColor" d="M12 4l1.4 1.4L7.8 11H20v2H7.8l5.6 5.6L12 20l-8-8 8-8z"></path>
+                      </svg>
+                    </span>
+                  </div>
+                  <div style="transition: all .24s cubic-bezier(.4,0,.2,1); transform: rotate(0); top: 0; left: 0; position: absolute; z-index: 100; color: #828689;">
+                    <span data-testid="search" data-icon="search">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="display: block; pointer-events: none;">
+                        <path fill="currentColor" d="M15.009 13.805h-.636l-.22-.219a5.184 5.184 0 0 0 1.256-3.386 5.207 5.207 0 1 0-5.207 5.208 5.183 5.183 0 0 0 3.385-1.255l.221.22v.635l4.004 3.999 1.194-1.195-3.997-4.007zm-4.808 0a3.605 3.605 0 1 1 0-7.21 3.605 3.605 0 0 1 0 7.21z"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </button>
+                <span></span>
+                <label style="right: 14px;left: 12px;padding-right: 32px;padding-left: 65px;background-color: #323739;border-radius: 18px;position: absolute;top: 7px;box-sizing: border-box;display: flex;align-items: center;height: 35px;">
+                  <div tabindex="-1" style="padding-right: 0;cursor: text;position: relative;display: flex;flex: 1;overflow: hidden;">
+                    <div style="padding: 0;font-size: 15px;white-space: nowrap;position: relative;width: 100%;min-height: 20px; line-height: 20px;color: #d4d5d7;word-wrap: break-word; -webkit-user-select: text;-moz-user-select: text;-ms-user-select: text;user-select: text;cursor: text;" data-tab="3" dir="ltr">
+                      <input type="search" name="search" placeholder="Search or start new chats.." style="background-color: initial; color: inherit; width: 95%" onfocus="focusF(this)" onblur="blurF(this)"/></div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col- inn2">regrgrgegtrhrhhtkljergr,ermgrrw</div>
+      </div>
+    </div>
+  </div>
+<!--  <div tabindex="-1" class="GDTQm _2iwLX message-out focusable-list-item" data-id="true_256756185037@c.us_3EB00FF972474B7763A0"><span></span><div class="_24wtQ _2W7I- _1-U5A"><span data-testid="tail-out" data-icon="tail-out" class="_1bUzr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 13" width="8" height="13"><path opacity=".13" d="M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z"></path><path fill="currentColor" d="M5.188 0H0v11.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z"></path></svg></span><div class="_3XpKm _20zqk"><span aria-label="You:"></span><div class="_1bR5a"><div class="copyable-text" data-pre-plain-text="[8:26 PM, 3/7/2021] Timothy😎😎😎: "><div class="_3ExzF"><span dir="ltr" class="_3-8er selectable-text copyable-text"><span>Those guys are on strike</span></span><span class="_1Bd9o _2ScdV"></span></div></div><div class="_2zWo9"><div class="UFTvj" role="button"><span class="_17Osw" dir="auto">8:26 PM</span><div class="_2nWgr"><span data-testid="msg-dblcheck" aria-label=" Read " data-icon="msg-dblcheck" class="_1RD_6"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15"><path fill="currentColor" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path></svg></span></div></div></div></div><span></span></div></div></div>-->
+<!--  <script src="../../public/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+  <script>
+      function focusF(element){
+          element.placeholder="";
+      }
+      function blurF(element){
+          element.placeholder="Search or start new chats..";
+      }
+  </script>
+</body>
+</html>

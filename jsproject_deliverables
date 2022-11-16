@@ -1,0 +1,12 @@
+In server directory
+	server.c-------------------------------------------------------------------------------------------
+	create_database.php (creates the database when run)
+	cron.php (reads files and stores their data to database)
+	cron.txt-------------------------------------------------------------------------------------------
+	(enrollment.txt file folder -> created and accessed by sessions)-----------------------------------
+	(given file folder -> uploaded from filezilla)-----------------------------------------------------
+	(vsftp file server to accept file upload) +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	
+In Client directory
+	client.c-------------------------------------------------------------------------------------------
+	filezilla client to upload files ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Screen Capture API</title>
+  <style>
+      #rv {
+          border: 1px solid #999;
+          width: 98%;
+          max-width: 860px;
+      }
+
+      .error {
+          color: red;
+      }
+
+      .warn {
+          color: orange;
+      }
+
+      .info {
+          color: darkgreen;
+      }
+  </style>
+</head>
+<body>
+  <p><button id="start">Start Capture</button>&nbsp;<button id="stop">Stop Capture</button></p>
+
+  <video id="video" hidden></video>
+  <video id="rv" autoplay controls src=""></video>
+  <br>
+
+  <strong>Log:</strong>
+  <br>
+  <pre id="log"></pre>
+  <script>
+      const videoElem = document.getElementById("video");
+      const logElem = document.getElementById("log");
+      const startElem = document.getElementById("start");
+      const stopElem = document.getElementById("stop");
+      const recordedVideo = document.getElementById("rv");
+
+      let mediaRecorder = {};
+      let chunks = [];
+
+      // Set event listeners for the start and stop buttons
+      startElem.addEventListener("click", function(evt) {
+          startCapture();
+      }, false);
+
+      stopElem.addEventListener("click", function(evt) {
+          stopCapture();
+      }, false);
+
+      console.log = msg => logElem.innerHTML += `${msg}<br>`;
+      console.error = msg => logElem.innerHTML += `<span class="error">${msg}</span><br>`;
+      console.warn = msg => logElem.innerHTML += `<span class="warn">${msg}<span><br>`;
+      console.info = msg => logElem.innerHTML += `<span class="info">${msg}</span><br>`;
+
+      function dumpOptionsInfo() {
+          const videoTrack = videoElem.srcObject.getVideoTracks()[0];
+          console.info("Track settings:");
+          console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+          console.info("Track constraints:");
+          console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+      }
+
+      async function startCapture() {
+          let displayMediaOptions = {
+              video:true,
+              audio: true
+          }
+
+          logElem.innerHTML = "";
+
+          try {
+              await navigator.mediaDevices.getDisplayMedia(displayMediaOptions).then(
+                  (stream)=>{
+                      videoElem.srcObject = stream;
+                      mediaRecorder = new MediaRecorder(stream);
+                      mediaRecorder.start();
+                      mediaRecorder.ondataavailable = function (ev) {
+                          chunks.push(ev.data);
+                      }
+                      mediaRecorder.onstop = () => {
+                          let blob = new Blob(chunks, {'type': 'video/webm; codecs=vp9'});
+                          chunks = [];
+                          recordedVideo.src = window.URL.createObjectURL(blob);
+                      }
+                  }
+              );
+              dumpOptionsInfo();
+          } catch(err) {
+              console.error("Error: " + err);
+          }
+
+      }
+
+      function stopCapture(evt) {
+          let tracks = videoElem.srcObject.getTracks();
+          tracks.forEach(track => track.stop());
+          videoElem.srcObject = null;
+          mediaRecorder.stop();
+      }
+  </script>
+</body>
+</html>

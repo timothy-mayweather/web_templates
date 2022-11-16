@@ -1,0 +1,436 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Videos</title>-->
+<!--  <link rel="stylesheet" href="../../public/css/app.css">-->
+<!--  <script src="../../public/js/app.js"></script>-->
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw==" crossorigin="anonymous" />-->
+<!--  <link rel="stylesheet" href="../../public/plugins/fontawesome-5-pro-master/css/all.min.css">-->
+
+<!--  <style>-->
+<!--    .container{-->
+<!--        display: flex;-->
+<!--        background: #ccc;-->
+<!--        justify-content: center;-->
+<!--        align-items: center;-->
+<!--        height: 100vh;-->
+<!--    }-->
+<!--    .video{-->
+<!--        width: 100%;-->
+<!--    }-->
+<!--    .c-video{-->
+<!--        width: 100%;-->
+<!--        max-width: 800px;-->
+<!--        position: relative;-->
+<!--        overflow: hidden;-->
+<!--    }-->
+<!--    .c-video:hover .controls{-->
+<!--        transform: translateY(0);-->
+<!--    }-->
+<!--    .controls{-->
+<!--        display: flex;-->
+<!--        position: absolute;-->
+<!--        bottom: 0;-->
+<!--        width: 100%;-->
+<!--        flex-wrap: wrap;-->
+<!--        background: rgba(0,0,0,0.7);-->
+<!--        transform: translateY(100%) translateY(-5px);-->
+<!--        transition: all 2.5s;-->
+<!--    }-->
+<!--    .buttons button{-->
+<!--        background: none;-->
+<!--        border: 0;-->
+<!--        outline: 0;-->
+<!--        cursor: pointer;-->
+<!--    }-->
+<!--    .buttons button:before{-->
+<!--        content: "\f144";-->
+<!--        font-family: 'Font Awesome 5 Free';-->
+<!--        width: 30px;-->
+<!--        height: 30px;-->
+<!--        font-size: 28px;-->
+<!--        color: #fff;-->
+<!--        -webkit-font-smoothing: antialiased;-->
+<!--    }-->
+<!--    .buttons{-->
+<!--        padding: 10px;-->
+<!--        color: #fff;-->
+<!--        font-size: 20px;-->
+<!--        font-family: 'Font Awesome 5 Free';-->
+<!--        -webkit-font-smoothing: antialiased;-->
+<!--    }-->
+<!--    .buttons button.play:before{-->
+<!--        content: "\f144";-->
+<!--    }-->
+<!--    .buttons button.pause:before{-->
+<!--        content: "\f28b";-->
+<!--    }-->
+<!--    .orange-bar{-->
+<!--        height: 3px;-->
+<!--        top: 0;-->
+<!--        left: 0;-->
+<!--        width: 100%;-->
+<!--        background-color: lightgray;-->
+<!--    }-->
+
+<!--    .slider{-->
+<!--        height: 100%;-->
+<!--        display: block;-->
+<!--        cursor: pointer;-->
+<!--        &#45;&#45;webkit-appearance: none;  /* Override default CSS styles */-->
+<!--        appearance: none;-->
+<!--        width: 100%; /* Full-width */-->
+<!--        background: darkgrey; /* Grey background */-->
+<!--        outline: none;-->
+<!--        opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */-->
+<!--        -webkit-transition: .2s;-->
+<!--        transition: opacity .2s;-->
+<!--    }-->
+<!--    .slider:hover {-->
+<!--        opacity: 1; /* Fully shown on mouse-over */-->
+<!--    }-->
+
+<!--    /*Chrome*/-->
+<!--    @media screen and (-webkit-min-device-pixel-ratio:0) {-->
+<!--        .slider {-->
+<!--            overflow: hidden;-->
+<!--        }-->
+
+<!--        .slider::-webkit-slider-runnable-track {-->
+<!--            height: 10px;-->
+<!--            -webkit-appearance: none;-->
+<!--            color: #13bba4;-->
+<!--            margin-top: -1px;-->
+<!--        }-->
+
+<!--        .slider::-webkit-slider-thumb {-->
+<!--            width: 10px;-->
+<!--            -webkit-appearance: none;-->
+<!--            height: 10px;-->
+<!--            cursor: pointer;-->
+<!--            background: greenyellow;-->
+<!--            box-shadow: -500px 0 0 500px orangered;-->
+<!--        }-->
+<!--    }-->
+
+<!--    /*FF*/-->
+<!--    .slider::-moz-range-thumb {-->
+<!--        background: greenyellow;-->
+<!--        cursor: pointer;-->
+<!--    }-->
+<!--    .slider::-moz-range-progress {-->
+<!--        background-color: orangered;-->
+<!--    }-->
+<!--    .slider::-moz-range-track {-->
+<!--        background-color: darkgrey;-->
+<!--    }-->
+
+<!--    /* IE*/-->
+<!--    .slider::-ms-thumb {-->
+<!--        background: greenyellow;-->
+<!--        cursor: pointer;-->
+<!--    }-->
+<!--    .slider::-ms-fill-lower {-->
+<!--        background-color: orangered;-->
+<!--    }-->
+<!--    .slider::-ms-fill-upper {-->
+<!--        background-color: darkgrey;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body onload="useMedia()">-->
+<!--  <div class="container">-->
+<!--    &lt;!&ndash;If video is not a recording, please remove the controls attribute, unhide all hidden attributes and uncomment the javascript  &ndash;&gt;-->
+<!--    <div class="c-video">-->
+<!--      <video controls autoplay autofocus style="width: 100%; height: 100%" id="recorder"></video>-->
+<!--      <video controls autoplay autofocus style="width: 100%; height: 100%" id="player" hidden></video>-->
+<!--      <img style="width: 100%; height: 100%" hidden>-->
+<!--      <canvas style="display:none;"></canvas>-->
+<!--&lt;!&ndash;      <video autofocus controls src="Love%20Yoo%20-feffe%20bussi%20official%20video.mp4" class="video"></video>&ndash;&gt;-->
+<!--      <div class="controls" hidden>-->
+<!--        <div class="orange-bar">-->
+<!--          <input type="range" class="slider" id="myRange" data-toggle="tooltip">-->
+<!--        </div>-->
+<!--        <div class="buttons">-->
+<!--          <a id="start"><i class="fa fa-step-backward"></i></a>-->
+<!--          <a id="back"><i class="fa fa-backward"></i></a>-->
+<!--          <button id="play-pause"></button>-->
+<!--          <a id="forward"><i class="fa fa-forward"></i></a>-->
+<!--          <a id="end"><i class="fa fa-step-forward"></i></a>-->
+<!--          <span id="duration" style="border: 1px solid purple; border-radius: 5px; padding: 5px; color: green"></span>-->
+<!--          <a id="volume"><i class="fa fa-volume-up" style="color: green"></i></a>-->
+<!--          <a id="expand"><i class="fa fa-expand"></i></a>-->
+<!--          <a id="pic"><i class="fa fa-ellipsis-v" style="color: orange"></i></a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="recording-controls" style="background-color: black; opacity: 0.9; padding: 6px; top: 0; position: absolute">-->
+<!--        <button id="closeCamera" title="Disconnect camera" class="fas fa-webcam-slash" style="color: red; background: inherit; border: inherit"></button>-->
+<!--        <button id="closeMic" title="Mute" class="fa fa-microphone-slash" style="color: red; background: inherit; border: inherit"></button>-->
+<!--        <span id="image-controls" hidden>-->
+<!--          <button id="save-image" class="fa fa-save" style="color: violet; background: inherit; border: inherit" title="save image"></button>-->
+<!--          <a id="img-download-link" download="captured"><button id="download-image" class="far fa-download" style="color: violet; background: inherit; border: inherit" title="download image"></button></a>-->
+<!--          <button id="discard-image" class="fa fa-arrow-left" style="color: violet; background: inherit; border: inherit" title="Go back. Image will be discarded"></button>-->
+<!--        </span>-->
+<!--        <span id="initial-controls">-->
+<!--          <button id="capture" class="far fa-camera" style="color: violet; background: inherit; border: inherit" title="capture"></button>-->
+<!--          <button id="record" class="far fa-video" style="color: lime; background: inherit; border: inherit" title="record"></button>-->
+<!--        </span>-->
+<!--        <button id="stop-recording" class="fa fa-stop-circle" style="color: red; background: inherit; border: inherit" title="stop recording" hidden></button>-->
+<!--        <span id="activity" style="color: floralwhite" hidden></span>-->
+<!--        <span id="player-controls" hidden>-->
+<!--          <button id="save-video" class="fa fa-save" style="color: lime; background: inherit; border: inherit" title="save video"></button>-->
+<!--          <a id="video-download-link" download="recorded"><button id="download-video" class="fa fa-download" style="color: lime; background: inherit; border: inherit" title="download video"></button></a>-->
+<!--          <button id="discard-video" class="fa fa-arrow-left" style="color: lime; background: inherit; border: inherit" title="Go back. Video will be discarded"></button>-->
+<!--        </span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <audio hidden>-->
+<!--    <source src="camera-shutter.oga">-->
+<!--    <source src="camera-shutter.ogg">-->
+<!--    <source src="camera-shutter.mp3">-->
+<!--    <source src="camera-shutter.wav">-->
+<!--    <source src="camera-shutter.opus">-->
+<!--    <source src="camera-shutter.flac">-->
+<!--  </audio>-->
+<!--&lt;!&ndash;  <script>&ndash;&gt;-->
+<!--&lt;!&ndash;    let video = document.querySelector('.video');&ndash;&gt;-->
+<!--&lt;!&ndash;    let slider = document.getElementById("myRange");&ndash;&gt;-->
+<!--&lt;!&ndash;    let playBtn = document.getElementById('play-pause');&ndash;&gt;-->
+<!--&lt;!&ndash;    let dur = document.getElementById('duration');&ndash;&gt;-->
+
+<!--&lt;!&ndash;    function toNormalTime(seconds) {&ndash;&gt;-->
+<!--&lt;!&ndash;        let time = new Date(seconds * 1000).toISOString().substr(11, 8);&ndash;&gt;-->
+<!--&lt;!&ndash;        if (time.length>6&&time[0]==='0'&&time[1]==='0'){&ndash;&gt;-->
+<!--&lt;!&ndash;            return time.slice(3);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        return time;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;    function togglePlay(){&ndash;&gt;-->
+<!--&lt;!&ndash;        if (video.paused){&ndash;&gt;-->
+<!--&lt;!&ndash;            playBtn.className = 'pause';&ndash;&gt;-->
+<!--&lt;!&ndash;            video.play();&ndash;&gt;-->
+<!--&lt;!&ndash;        }else{&ndash;&gt;-->
+<!--&lt;!&ndash;            playBtn.className = 'play';&ndash;&gt;-->
+<!--&lt;!&ndash;            video.pause();&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--&lt;!&ndash;    playBtn.onclick = ()=>{&ndash;&gt;-->
+<!--&lt;!&ndash;        togglePlay();&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;    // video.onclick = ()=>{&ndash;&gt;-->
+<!--&lt;!&ndash;    //     //togglePlay();&ndash;&gt;-->
+<!--&lt;!&ndash;    //     if (video.paused){&ndash;&gt;-->
+<!--&lt;!&ndash;    //         video.play();&ndash;&gt;-->
+<!--&lt;!&ndash;    //     }else{&ndash;&gt;-->
+<!--&lt;!&ndash;    //         video.pause();&ndash;&gt;-->
+<!--&lt;!&ndash;    //     }&ndash;&gt;-->
+<!--&lt;!&ndash;    // }&ndash;&gt;-->
+<!--&lt;!&ndash;    slider.oninput = function() {&ndash;&gt;-->
+<!--&lt;!&ndash;        video.currentTime = this.value;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;    slider.onmouseenter = ()=>{&ndash;&gt;-->
+<!--&lt;!&ndash;        console.log(this.value)&ndash;&gt;-->
+<!--&lt;!&ndash;        slider.title = toNormalTime(slider.value);&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;    video.addEventListener('timeupdate', ()=>{&ndash;&gt;-->
+<!--&lt;!&ndash;        slider.value = video.currentTime;&ndash;&gt;-->
+<!--&lt;!&ndash;        dur.innerText = toNormalTime(video.currentTime)+" / "+toNormalTime(video.duration);&ndash;&gt;-->
+<!--&lt;!&ndash;        if (video.ended){&ndash;&gt;-->
+<!--&lt;!&ndash;            playBtn.className = 'play';&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    });&ndash;&gt;-->
+<!--&lt;!&ndash;    window.onload = ()=>{&ndash;&gt;-->
+<!--&lt;!&ndash;        dur.innerText = toNormalTime(video.currentTime)+" / "+toNormalTime(video.duration);&ndash;&gt;-->
+<!--&lt;!&ndash;        slider.setAttribute("min", "0");&ndash;&gt;-->
+<!--&lt;!&ndash;        slider.setAttribute("max", video.duration);&ndash;&gt;-->
+<!--&lt;!&ndash;        slider.value = video.currentTime;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;  </script>&ndash;&gt;-->
+<!--  &lt;!&ndash;-->
+<!--  /*********************************-->
+<!--  getUserMedia returns a Promise-->
+<!--  resolve - returns a MediaStream Object-->
+<!--  reject returns one of the following errors-->
+<!--  AbortError - generic unknown cause-->
+<!--  NotAllowedError (SecurityError) - user rejected permissions-->
+<!--  NotFoundError - missing media track-->
+<!--  NotReadableError - user permissions given but hardware/OS error-->
+<!--  OverconstrainedError - constraint video settings preventing-->
+<!--  TypeError - audio: false, video: false-->
+<!--  *********************************/-->
+<!--  &ndash;&gt;-->
+<!--  <script>-->
+<!--      function useMedia() {-->
+<!--          const activity = document.getElementById("activity");-->
+<!--          const initialControls = document.getElementById("initial-controls");-->
+<!--          const imageControls = document.getElementById("image-controls");-->
+<!--          const playerControls = document.getElementById('player-controls');-->
+<!--          const discardImage = document.getElementById('discard-image');-->
+<!--          const downloadImageLink = document.getElementById('img-download-link');-->
+<!--          const downloadVideoLink = document.getElementById("video-download-link");-->
+<!--          const startRecording = document.querySelector("#record");-->
+<!--          const stopRecording = document.getElementById("stop-recording");-->
+<!--          const discardVideo = document.getElementById("discard-video");-->
+<!--          const screenshotButton = document.getElementById("capture");-->
+<!--          const captureSound = document.querySelector('audio');-->
+<!--          const img = document.querySelector("img");-->
+<!--          const video = document.getElementById("recorder");-->
+<!--          const recordedVideo = document.getElementById("player");-->
+<!--          const canvas = document.createElement("canvas");-->
+<!--          const closeCamera = document.getElementById("closeCamera");-->
+<!--          const closeMic = document.getElementById("closeMic");-->
+
+<!--          let constraints = {-->
+<!--              video: {-->
+<!--                  facingMode: "user"-->
+<!--              },-->
+<!--              audio: {-->
+<!--                  echoCancellation: true-->
+<!--              }-->
+<!--          }-->
+
+<!--          DetectRTC.load(() => {-->
+<!--              if (DetectRTC.isWebRTCSupported === false) {-->
+<!--                  alert('Please use Chrome or Firefox.');-->
+<!--              }-->
+<!--              if (DetectRTC.hasWebcam === false) {-->
+<!--                  alert('Please install an external webcam device.');-->
+<!--              }-->
+<!--              if (DetectRTC.hasMicrophone === false) {-->
+<!--                  alert('Please install an external microphone device.');-->
+<!--              }-->
+<!--              if (DetectRTC.hasSpeakers === false && (DetectRTC.browser.name === 'Chrome' || DetectRTC.browser.name === 'Edge')) {-->
+<!--                  alert('Oops, your system can not play audios.');-->
+<!--              }-->
+
+<!--              navigator.mediaDevices.getUserMedia(constraints)-->
+<!--                  .then((stream)=> {-->
+<!--                      video.srcObject = stream;-->
+<!--                      let mediaRecorder = new MediaRecorder(stream);-->
+<!--                      let chunks = [];-->
+
+<!--                      startRecording.onclick = function () {-->
+<!--                          initialControls.hidden = true;-->
+<!--                          stopRecording.hidden = false;-->
+<!--                          activity.hidden = false;-->
+<!--                          mediaRecorder.start();-->
+<!--                          video.onpause = ()=>{-->
+<!--                              mediaRecorder.pause();-->
+<!--                              activity.innerText = "paused";-->
+<!--                          }-->
+
+<!--                          video.onplay = ()=>{-->
+<!--                              mediaRecorder.resume();-->
+<!--                              activity.innerText = "recording...";-->
+<!--                          }-->
+<!--                          activity.innerText = "recording...";-->
+<!--                          console.log(mediaRecorder.state);-->
+<!--                      };-->
+
+<!--                      stopRecording.addEventListener('click', ()=>{-->
+<!--                          stopRecording.hidden = true;-->
+<!--                          activity.hidden = true;-->
+<!--                          video.hidden = true;-->
+<!--                          recordedVideo.hidden = false;-->
+<!--                          playerControls.hidden = false;-->
+<!--                          mediaRecorder.stop();-->
+<!--                          console.log(mediaRecorder.state);-->
+<!--                      });-->
+<!--                      mediaRecorder.ondataavailable = function(ev) {-->
+<!--                          chunks.push(ev.data);-->
+<!--                      }-->
+<!--                      mediaRecorder.onstop = ()=>{-->
+<!--                          let blob = new Blob(chunks, { 'type' : 'video/mp4;' });-->
+<!--                          chunks = [];-->
+<!--                          recordedVideo.src = window.URL.createObjectURL(blob);-->
+<!--                          downloadVideoLink.setAttribute("href", recordedVideo.src);-->
+<!--                      }-->
+<!--                      closeCamera.onclick = ()=>{-->
+<!--                          if (closeCamera.className === "fa fa-webcam"){-->
+<!--                              stream.getTracks().forEach(function(track) {-->
+<!--                                  if (track.readyState === 'live' && track.kind === 'video') {-->
+<!--                                      track.enabled = true;-->
+<!--                                  }-->
+<!--                              });-->
+<!--                              closeCamera.setAttribute("title", "Disconnect camera");-->
+<!--                              closeCamera.className = "fas fa-webcam-slash";-->
+<!--                              closeCamera.style.color = "red";-->
+<!--                          }else {-->
+<!--                              stream.getTracks().forEach(function(track) {-->
+<!--                                  if (track.readyState === 'live' && track.kind === 'video') {-->
+<!--                                      track.enabled = false;-->
+<!--                                  }-->
+<!--                              });-->
+
+<!--                              closeCamera.setAttribute("title", "Turn on camera");-->
+<!--                              closeCamera.className = "fa fa-webcam";-->
+<!--                              closeCamera.style.color = "lime";-->
+<!--                          }-->
+<!--                      }-->
+<!--                      closeMic.onclick = ()=>{-->
+<!--                          if (closeMic.className === "fa fa-microphone"){-->
+<!--                              let track = stream.getTracks()[0];-->
+<!--                              stream.getTracks().forEach(function(track) {-->
+<!--                                  if (track.readyState === 'live' && track.kind === 'audio') {-->
+<!--                                      track.enabled = true;-->
+<!--                                  }-->
+<!--                              });-->
+<!--                              closeMic.setAttribute("title", "Mute");-->
+<!--                              closeMic.className = "fa fa-microphone-slash"-->
+<!--                              closeMic.style.color = "red";-->
+<!--                          }else {-->
+<!--                              stream.getTracks().forEach(function(track) {-->
+<!--                                  if (track.readyState === 'live' && track.kind === 'audio') {-->
+<!--                                      track.enabled = false;-->
+<!--                                  }-->
+<!--                              });-->
+<!--                              closeMic.setAttribute("title", "Turn on Microphone");-->
+<!--                              closeMic.className = "fa fa-microphone"-->
+<!--                              closeMic.style.color = "lime";-->
+<!--                          }-->
+<!--                      }-->
+<!--                  })-->
+<!--                  .catch(function(err) {-->
+<!--                      console.log(err.name, err.message);-->
+<!--                      activity.innerText = err.message;-->
+<!--                      activity.hidden = false;-->
+<!--                  });-->
+<!--          });-->
+
+<!--          screenshotButton.onclick = function () {-->
+<!--              captureSound.play();-->
+<!--              img.hidden = false;-->
+<!--              imageControls.hidden = false;-->
+<!--              video.hidden = true;-->
+<!--              initialControls.hidden = true;-->
+
+<!--              canvas.width = video.videoWidth;-->
+<!--              canvas.height = video.videoHeight;-->
+<!--              canvas.getContext("2d").drawImage(video, 0, 0);-->
+<!--              img.src = canvas.toDataURL("image/png");-->
+
+<!--              downloadImageLink.setAttribute("href", img.src);-->
+<!--          };-->
+
+<!--          discardImage.onclick = ()=>{-->
+<!--              img.src = "";-->
+<!--              img.hidden = true;-->
+<!--              imageControls.hidden = true;-->
+<!--              video.hidden = false;-->
+<!--              initialControls.hidden = false;-->
+<!--          }-->
+
+<!--          discardVideo.onclick = ()=>{-->
+<!--              recordedVideo.src = "";-->
+<!--              recordedVideo.hidden = true;-->
+<!--              playerControls.hidden = true;-->
+<!--              video.hidden = false;-->
+<!--              initialControls.hidden = false;-->
+<!--          }-->
+<!--      }-->
+<!--  </script>-->
+<!--</body>-->
+<!--</html>-->
